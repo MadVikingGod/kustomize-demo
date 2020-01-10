@@ -1,0 +1,17 @@
+bases:
+  - ../../base
+commonLabels:
+  env: dev
+namePrefix: dev-
+patchesStrategicMerge:
+  - patch.yaml
+patches:
+  - target:
+      group: apps
+      version: v1
+      kind: Deployment
+      labelSelector: "type=nginx"
+    path: image.yaml
+  - target:
+      kind: Deployment
+    path: strategy.yaml

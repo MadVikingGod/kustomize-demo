@@ -1,0 +1,35 @@
+apiVersion: apps/v1 # for versions before 1.9.0 use apps/v1beta2
+kind: Deployment
+metadata:
+  name: backend
+  labels:
+    type: nginx
+spec:
+  selector:
+    matchLabels:
+      app: backend
+  template:
+    metadata:
+      labels:
+        app: backend
+    spec:
+      containers:
+        - name: nginx
+          image: nginx
+          ports:
+            - containerPort: 80
+          volumeMounts:
+            - mountPath: /usr/share/nginx/html
+              name: content
+      volumes:
+        - name: content
+          configMap:
+            name: backend-content
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: backend-content
+data:
+  index.html: |
+    <H1>This is a basic backend!</H1>

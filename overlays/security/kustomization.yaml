@@ -1,0 +1,5 @@
+patches:
+- target:
+    kind: Deployment
+    labelSelector: type=nginx
+  path: root.yaml
