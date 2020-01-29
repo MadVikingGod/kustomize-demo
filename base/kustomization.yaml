@@ -4,3 +4,17 @@ resources:
   - frontend/deployment.yaml
   - frontend/service.yaml
   - backend/deployment.yaml
+  - backend/configmap.yaml
+  - backend/service.yaml
+secretGenerator:
+  - name: super-secrets
+    envs:
+      - secrets.env
+vars:
+  - name: BACKEND_SVC
+    objref:
+      name: backend
+      kind: Service
+      apiVersion: v1
+    fieldref:
+      fieldpath: metadata.name

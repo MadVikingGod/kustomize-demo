@@ -21,6 +21,9 @@ spec:
           volumeMounts:
             - mountPath: /usr/share/nginx/html
               name: content
+          env:
+            - name: BACKEND_SVC
+              value: http://$(BACKEND_SVC).default.svc.cluster.local
       volumes:
         - name: content
           configMap:

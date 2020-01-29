@@ -1,10 +1,22 @@
+# alias orig="kustomize build --load_restrictor none base"
+# alias dev="kustomize build --load_restrictor none overlays/dev"
+
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
 bases:
   - ../../base
+# dev | yq .metadata.labels
 commonLabels:
   env: dev
+# dev | yq .metadata.name
 namePrefix: dev-
+
 patchesStrategicMerge:
-  - patch.yaml
+  - patch.yaml # dev | yq .spec.template.spec.initContainers
+  - confgmap.yaml
+  # orig | yq 'select(.metadata.name | match("backend-config")) | .data'
+  # dev | yq 'select(.metadata.name | match("backend-config")) | .data'
 patches:
   - target:
       group: apps
@@ -12,6 +24,18 @@ patches:
       kind: Deployment
       labelSelector: "type=nginx"
     path: image.yaml
+    # orig | yq 'select(.kind == "Deployment") | .spec.template.spec.containers[].image'
+    # dev | yq 'select(.kind == "Deployment") | .spec.template.spec.containers[].image'
   - target:
       kind: Deployment
     path: strategy.yaml
+    # orig | yq 'select(.kind == "Deployment") | .spec.strategy
+    # dev | yq 'select(.kind == "Deployment") | .spec.strategy
+
+# orig | yq 'select(.kind == "Secret") | .data '
+# dev | yq 'select(.kind == "Secret") | .data '
+secretGenerator:
+  - name: super-secrets
+    envs:
+      - secrets.env
+    behavior: merge

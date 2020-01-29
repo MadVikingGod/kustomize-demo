@@ -1,6 +1,7 @@
+# alias prod=
 bases:
   - ../../base
-#  - ../security
+  - ../security
 
 commonLabels:
   env: prod
@@ -10,14 +11,14 @@ replicas:
     count: 3
   - name: backend
     count: 5
-patches:
-  - target:
-      group: apps
-      version: v1
-      kind: Deployment
-      labelSelector: "type=nginx"
-    path: image.yaml
-  - target:
-      kind: Deployment
-    path: ../security/root.yaml
+#patches:
+#  - target:
+#      group: apps
+#      version: v1
+#      kind: Deployment
+#      labelSelector: "type=nginx"
+#    path: image.yaml
+#  - target:
+#      kind: Deployment
+#    path: ../security/root.yaml
 

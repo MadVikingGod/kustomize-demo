@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: backend-config
+data:
+  stuff: bunch of stuff
+  other_stuff: just more stuff
