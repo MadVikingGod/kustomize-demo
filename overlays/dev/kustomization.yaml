@@ -6,31 +6,38 @@ kind: Kustomization
 
 bases:
   - ../../base
+
+# orig | yq .metadata.labels
 # dev | yq .metadata.labels
 commonLabels:
   env: dev
+# orig | yq .metadata.name
 # dev | yq .metadata.name
 namePrefix: dev-
 
 patchesStrategicMerge:
-  - patch.yaml # dev | yq .spec.template.spec.initContainers
-  - confgmap.yaml
+  # orig | yq .spec.template.spec.initContainers
+  # dev | yq .spec.template.spec.initContainers
+  - patch.yaml
   # orig | yq 'select(.metadata.name | match("backend-config")) | .data'
   # dev | yq 'select(.metadata.name | match("backend-config")) | .data'
+  - confgmap.yaml
+
 patches:
+  # orig | yq 'select(.kind == "Deployment") | .spec.template.spec.containers[].image'
+  # dev | yq 'select(.kind == "Deployment") | .spec.template.spec.containers[].image'
   - target:
       group: apps
       version: v1
       kind: Deployment
       labelSelector: "type=nginx"
     path: image.yaml
-    # orig | yq 'select(.kind == "Deployment") | .spec.template.spec.containers[].image'
-    # dev | yq 'select(.kind == "Deployment") | .spec.template.spec.containers[].image'
+
+  # orig | yq 'select(.kind == "Deployment") | .spec.strategy
+  # dev | yq 'select(.kind == "Deployment") | .spec.strategy
   - target:
       kind: Deployment
     path: strategy.yaml
-    # orig | yq 'select(.kind == "Deployment") | .spec.strategy
-    # dev | yq 'select(.kind == "Deployment") | .spec.strategy
 
 # orig | yq 'select(.kind == "Secret") | .data '
 # dev | yq 'select(.kind == "Secret") | .data '
