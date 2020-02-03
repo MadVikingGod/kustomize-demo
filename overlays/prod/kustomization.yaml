@@ -1,4 +1,4 @@
-# alias prod=
+# alias prod='kustomize build --load_restrictor none overlays/prod'
 bases:
   - ../../base
   - ../security
